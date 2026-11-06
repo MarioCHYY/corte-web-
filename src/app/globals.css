@@ -1,0 +1,210 @@
+@import "tailwindcss";
+
+/* Paleta de corte (ver branding/marca.html) */
+@theme {
+  --color-ink: #121417;
+  --color-slate: #2a2e35;
+  --color-slate-2: #1b1e23;
+  --color-line: #33373f;
+  --color-lime: #c6f432;
+  --color-lime-dim: #9dc21f;
+  --color-coral: #ff5c5c;
+  --color-paper: #f2f2ee;
+  --color-mute: #9aa0a8;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-sans);
+}
+
+/* los montos siempre con números del mismo ancho */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.6;
+}
+
+/* Animaciones del panel de entrar */
+@keyframes corte-pop {
+  0% { transform: scale(0.4); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes corte-shine {
+  0% { transform: translateX(0) skewX(-12deg); opacity: 1; }
+  100% { transform: translateX(400%) skewX(-12deg); opacity: 0; }
+}
+@keyframes corte-wiggle {
+  0%, 100% { transform: rotate(0); }
+  30% { transform: rotate(-8deg) scale(1.08); }
+  60% { transform: rotate(6deg); }
+}
+
+/* ===================================================================
+   Movimiento del sitio
+   - .rv: sección que se anima al entrar en pantalla (Reveal añade data-in)
+   - [data-r]: elementos dentro que aparecen escalonados con --i
+   Todo se desactiva con "reducir movimiento".
+   =================================================================== */
+:root {
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.rv [data-r] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s var(--ease-out),
+    transform 0.9s var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+.rv [data-r="left"] { transform: translateX(-40px); }
+.rv [data-r="right"] { transform: translateX(40px); }
+.rv [data-r="pop"] {
+  transform: scale(0.4);
+  transition-timing-function: var(--ease-out), var(--ease-spring);
+}
+.rv [data-r="zoom"] { transform: translateY(40px) scale(0.94); }
+.rv[data-in] [data-r] {
+  opacity: 1;
+  transform: none;
+}
+
+/* línea que se dibuja de izquierda a derecha */
+.rv .grow-x {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.6s var(--ease-out) 0.2s;
+}
+.rv[data-in] .grow-x { transform: scaleX(1); }
+
+/* trazos SVG que se dibujan (usar pathLength="1") */
+.rv .draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.9s var(--ease-out);
+  transition-delay: calc(0.3s + var(--i, 0) * 160ms);
+}
+.rv[data-in] .draw { stroke-dashoffset: 0; }
+.rv .fade-late {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  transition-delay: calc(0.9s + var(--i, 0) * 160ms);
+}
+.rv[data-in] .fade-late { opacity: 1; }
+
+/* título de la portada: palabra por palabra */
+@keyframes word-in {
+  from { opacity: 0; transform: translateY(0.45em) rotate(2deg); filter: blur(6px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+.word-in {
+  display: inline-block;
+  animation: word-in 0.9s var(--ease-out) both;
+  animation-delay: calc(0.08s + var(--i, 0) * 70ms);
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+.fade-up {
+  animation: fade-up 0.9s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 120ms + 0.5s);
+}
+
+/* cinta de cargos */
+@keyframes ticker {
+  to { transform: translateX(-50%); }
+}
+.ticker-track {
+  animation: ticker 45s linear infinite;
+}
+.ticker:hover .ticker-track { animation-play-state: paused; }
+
+/* celular que flota y notificaciones que llegan */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(-1.5deg); }
+  50% { transform: translateY(-14px) rotate(-0.5deg); }
+}
+.float { animation: float 7s ease-in-out infinite; }
+@keyframes toast-cycle {
+  0%, 4% { opacity: 0; transform: translateY(-16px) scale(0.95); }
+  8%, 42% { opacity: 1; transform: none; }
+  48%, 100% { opacity: 0; transform: translateY(-8px) scale(0.97); }
+}
+.toast-cycle {
+  animation: toast-cycle 9s var(--ease-out) infinite;
+  animation-delay: var(--d, 0s);
+}
+
+/* celdas del calendario de meses */
+@keyframes cell-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.92); }
+  to { opacity: 1; transform: none; }
+}
+.cell-in {
+  animation: cell-in 0.45s var(--ease-spring) both;
+  animation-delay: calc(var(--i, 0) * 35ms);
+}
+
+/* puntos de "escribiendo…" */
+@keyframes typing {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+.typing-dot { animation: typing 1s infinite; }
+.typing-dot:nth-child(2) { animation-delay: 0.15s; }
+.typing-dot:nth-child(3) { animation-delay: 0.3s; }
+
+/* ícono gigante del cierre */
+@keyframes slow-spin {
+  0%, 100% { transform: rotate(-8deg) translateY(0); }
+  50% { transform: rotate(4deg) translateY(-12px); }
+}
+.slow-spin { animation: slow-spin 12s ease-in-out infinite; }
+
+/* botones con un pequeño levantón */
+.lift { transition: transform 0.25s var(--ease-spring), background-color 0.2s, box-shadow 0.25s; }
+.lift:hover { transform: translateY(-2px); box-shadow: 0 10px 30px -10px rgba(198, 244, 50, 0.45); }
+.lift:active { transform: translateY(0) scale(0.98); }
+
+@media (prefers-reduced-motion: reduce) {
+  .rv [data-r], .rv .grow-x, .rv .draw, .rv .fade-late {
+    opacity: 1 !important;
+    transform: none !important;
+    stroke-dashoffset: 0 !important;
+    transition: none !important;
+  }
+  .word-in, .fade-up, .ticker-track, .float, .toast-cycle, .cell-in, .typing-dot, .slow-spin {
+    animation: none !important;
+  }
+  .toast-cycle { opacity: 1; }
+}
+
+/* Tutorial de instalación: anillo que señala dónde tocar */
+@keyframes install-pulse {
+  0% { opacity: 0.9; transform: scale(0.9); }
+  70% { opacity: 0; transform: scale(1.25); }
+  100% { opacity: 0; transform: scale(1.25); }
+}
+.install-pulse { animation: install-pulse 1.6s ease-out infinite; }
+@keyframes cell-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.92); }
+  to { opacity: 1; transform: none; }
+}
+.cell-in { animation: cell-in 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both; animation-delay: calc(var(--i, 0) * 35ms); }
+@media (prefers-reduced-motion: reduce) {
+  .install-pulse, .cell-in { animation: none !important; }
+}

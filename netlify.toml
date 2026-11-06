@@ -1,0 +1,7 @@
+# Configuración para Netlify (si usas Vercel no hace falta)
+[build]
+  command = "npm run build"
+  publish = "out"
+
+[build.environment]
+  NODE_VERSION = "22"
