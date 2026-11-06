@@ -11,7 +11,7 @@ export const SITE = {
   /** Fecha de la última actualización de los documentos legales */
   legalUpdated: "5 de noviembre de 2026",
   /** Dirección donde vive la app (registro, entrar, grupos) */
-  appUrl: (process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000").replace(/\/$/, ""),
+  appUrl: (process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL ? "https://app.corte.mariobencomodev.com" : "http://localhost:3000")).replace(/\/$/, ""),
   /** Dirección pública de este sitio, para las imágenes al compartir el link */
   siteUrl: (
     process.env.NEXT_PUBLIC_SITE_URL ||
